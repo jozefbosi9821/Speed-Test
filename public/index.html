@@ -37,6 +37,10 @@
                   <span class="dial-needle-cap"></span>
                 </div>
                 <div class="dial-inner">
+                  <button id="startTest" type="button" class="go-button">
+                    <span class="go-button-ring"></span>
+                    <span class="go-button-text">GO</span>
+                  </button>
                   <span id="dialInnerLabel" class="dial-inner-label">READY</span>
                   <span class="dial-reading">
                     <span id="speedValue" class="speed-value">0.00</span>
@@ -49,19 +53,16 @@
           <div class="speed-dashboard">
             <div class="dashboard-card">
               <div class="dashboard-top">
-                <button id="startTest" type="button" class="go-button">
-                  <span class="go-button-ring"></span>
-                  <span class="go-button-text">GO</span>
-                </button>
                 <div class="dashboard-status">
                   <span class="status-label">Status</span>
                   <p id="status" class="status" role="status" aria-live="polite">Ready when you are.</p>
                 </div>
               </div>
-              <div class="summary-grid">
-                <article class="summary-card summary-card--download">
-                  <div class="summary-heading">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <div class="dashboard-results">
+                <div class="summary-grid">
+                  <article class="summary-card summary-card--download">
+                    <div class="summary-heading">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M12 3a1 1 0 0 1 1 1v8.17l2.3-2.29a1 1 0 0 1 1.4 1.42l-4 3.99a1 1 0 0 1-1.4 0l-4-3.99a1 1 0 1 1 1.4-1.42L11 12.17V4a1 1 0 0 1 1-1Zm-7 14a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" />
                     </svg>
                     <span>Download</span>
@@ -98,67 +99,68 @@
                   </p>
                   <span class="summary-subtext">Round-trip latency</span>
                 </article>
-              </div>
-              <div class="indicator-grid">
-                <div class="indicator">
-                  <div class="indicator-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" focusable="false">
-                      <path d="M12 3a9 9 0 0 1 8.94 8.06 1 1 0 1 1-1.99.28A7 7 0 1 0 19 12a1 1 0 0 1 2 0 9 9 0 1 1-9-9Z" />
-                      <path d="M12 7a1 1 0 0 1 1 1v4.59l2.3 2.3a1 1 0 1 1-1.4 1.41l-2.6-2.6A1 1 0 0 1 11 13V8a1 1 0 0 1 1-1Z" />
-                    </svg>
+                </div>
+                <div class="indicator-grid">
+                  <div class="indicator">
+                    <div class="indicator-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M12 3a9 9 0 0 1 8.94 8.06 1 1 0 1 1-1.99.28A7 7 0 1 0 19 12a1 1 0 0 1 2 0 9 9 0 1 1-9-9Z" />
+                        <path d="M12 7a1 1 0 0 1 1 1v4.59l2.3 2.3a1 1 0 1 1-1.4 1.41l-2.6-2.6A1 1 0 0 1 11 13V8a1 1 0 0 1 1-1Z" />
+                      </svg>
+                    </div>
+                    <div class="indicator-copy">
+                      <span class="indicator-label">Gaming</span>
+                      <span id="indicatorGaming" class="indicator-value">--</span>
+                    </div>
                   </div>
-                  <div class="indicator-copy">
-                    <span class="indicator-label">Gaming</span>
-                    <span id="indicatorGaming" class="indicator-value">--</span>
+                  <div class="indicator">
+                    <div class="indicator-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M4 5a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v14a1 1 0 0 1-1.45.89L12 16.62l-6.55 3.27A1 1 0 0 1 4 19Z" />
+                      </svg>
+                    </div>
+                    <div class="indicator-copy">
+                      <span class="indicator-label">Streaming</span>
+                      <span id="indicatorStreaming" class="indicator-value">--</span>
+                    </div>
+                  </div>
+                  <div class="indicator">
+                    <div class="indicator-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M5 4a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v16a1 1 0 0 1-1.55.83L12 17.64l-5.45 3.19A1 1 0 0 1 5 20Z" />
+                        <path d="M9 6a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2Zm0 4a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2Zm0 4a1 1 0 0 0 0 2h3a1 1 0 0 0 0-2Z" />
+                      </svg>
+                    </div>
+                    <div class="indicator-copy">
+                      <span class="indicator-label">Video Calls</span>
+                      <span id="indicatorVideo" class="indicator-value">--</span>
+                    </div>
+                  </div>
+                  <div class="indicator">
+                    <div class="indicator-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-3.59l1.3 1.29a1 1 0 1 1-1.42 1.42l-2.7-2.7a1 1 0 0 1 0-1.42l2.7-2.7a1 1 0 1 1 1.42 1.42L14.41 17H18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3a1 1 0 0 1 0 2H6a3 3 0 0 1-3-3Z" />
+                      </svg>
+                    </div>
+                    <div class="indicator-copy">
+                      <span class="indicator-label">Browsing</span>
+                      <span id="indicatorBrowsing" class="indicator-value">--</span>
+                    </div>
                   </div>
                 </div>
-                <div class="indicator">
-                  <div class="indicator-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" focusable="false">
-                      <path d="M4 5a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v14a1 1 0 0 1-1.45.89L12 16.62l-6.55 3.27A1 1 0 0 1 4 19Z" />
-                    </svg>
+                <div class="connection-card">
+                  <div class="connection-row">
+                    <span class="connection-label">Connections</span>
+                    <span class="connection-value">Multi</span>
                   </div>
-                  <div class="indicator-copy">
-                    <span class="indicator-label">Streaming</span>
-                    <span id="indicatorStreaming" class="indicator-value">--</span>
+                  <div class="connection-row">
+                    <span class="connection-label">Server</span>
+                    <span id="serverValue" class="connection-value">local</span>
                   </div>
-                </div>
-                <div class="indicator">
-                  <div class="indicator-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" focusable="false">
-                      <path d="M5 4a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v16a1 1 0 0 1-1.55.83L12 17.64l-5.45 3.19A1 1 0 0 1 5 20Z" />
-                      <path d="M9 6a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2Zm0 4a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2Zm0 4a1 1 0 0 0 0 2h3a1 1 0 0 0 0-2Z" />
-                    </svg>
+                  <div class="connection-row">
+                    <span class="connection-label">Current Phase</span>
+                    <span id="speedLabel" class="connection-value connection-value--accent">Idle</span>
                   </div>
-                  <div class="indicator-copy">
-                    <span class="indicator-label">Video Calls</span>
-                    <span id="indicatorVideo" class="indicator-value">--</span>
-                  </div>
-                </div>
-                <div class="indicator">
-                  <div class="indicator-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" focusable="false">
-                      <path d="M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-3.59l1.3 1.29a1 1 0 1 1-1.42 1.42l-2.7-2.7a1 1 0 0 1 0-1.42l2.7-2.7a1 1 0 1 1 1.42 1.42L14.41 17H18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3a1 1 0 0 1 0 2H6a3 3 0 0 1-3-3Z" />
-                    </svg>
-                  </div>
-                  <div class="indicator-copy">
-                    <span class="indicator-label">Browsing</span>
-                    <span id="indicatorBrowsing" class="indicator-value">--</span>
-                  </div>
-                </div>
-              </div>
-              <div class="connection-card">
-                <div class="connection-row">
-                  <span class="connection-label">Connections</span>
-                  <span class="connection-value">Multi</span>
-                </div>
-                <div class="connection-row">
-                  <span class="connection-label">Server</span>
-                  <span id="serverValue" class="connection-value">local</span>
-                </div>
-                <div class="connection-row">
-                  <span class="connection-label">Current Phase</span>
-                  <span id="speedLabel" class="connection-value connection-value--accent">Idle</span>
                 </div>
               </div>
             </div>

@@ -252,6 +252,9 @@ header p {
   text-transform: uppercase;
   color: rgba(173, 191, 230, 0.7);
   margin-bottom: 0.65rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .dial-reading {
@@ -259,6 +262,9 @@ header p {
   align-items: baseline;
   gap: 0.5rem;
   font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .speed-value {
@@ -274,34 +280,10 @@ header p {
   letter-spacing: 0.2em;
 }
 
-.speed-dashboard {
-  display: flex;
-  align-items: stretch;
-}
-
-.dashboard-card {
-  width: 100%;
-  background: linear-gradient(155deg, rgba(13, 18, 40, 0.92), rgba(6, 9, 25, 0.9));
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 22px 60px rgba(6, 10, 28, 0.65);
-}
-
-.dashboard-top {
-  display: flex;
-  align-items: center;
-  gap: 1.75rem;
-}
-
 .go-button {
-  position: relative;
-  width: 126px;
+  position: absolute;
+  inset: auto;
+  width: clamp(118px, 34%, 170px);
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   border: none;
@@ -315,7 +297,10 @@ header p {
     0 24px 45px rgba(18, 32, 64, 0.55),
     inset 0 4px 10px rgba(255, 255, 255, 0.55),
     inset 0 -10px 16px rgba(31, 44, 86, 0.95);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.2s ease;
+  display: grid;
+  place-items: center;
+  z-index: 2;
 }
 
 .go-button-ring {
@@ -344,6 +329,32 @@ header p {
 .go-button:focus-visible {
   outline: 2px solid rgba(84, 240, 255, 0.7);
   outline-offset: 6px;
+}
+
+.speed-dashboard {
+  display: flex;
+  align-items: stretch;
+}
+
+.dashboard-card {
+  width: 100%;
+  background: linear-gradient(155deg, rgba(13, 18, 40, 0.92), rgba(6, 9, 25, 0.9));
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 22px 60px rgba(6, 10, 28, 0.65);
+}
+
+.dashboard-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
 }
 
 .dashboard-status {
@@ -489,6 +500,15 @@ header p {
   color: #e5f6ff;
 }
 
+.dashboard-results {
+  display: grid;
+  gap: 1.75rem;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+}
+
 .connection-card {
   display: grid;
   gap: 0.6rem;
@@ -521,6 +541,24 @@ header p {
 
 .connection-value--accent {
   color: var(--teal);
+}
+
+.app.is-running .go-button {
+  opacity: 0;
+  transform: scale(0.7);
+  pointer-events: none;
+}
+
+.app.is-running .dial-inner-label,
+.app.is-running .dial-reading {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.app.has-results .dashboard-results {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .details {
@@ -564,6 +602,8 @@ footer {
   .dashboard-top {
     flex-direction: column;
     align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
   }
 
   .go-button {

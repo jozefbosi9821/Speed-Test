@@ -1,3 +1,4 @@
+const appEl = document.querySelector('.app');
 const startButton = document.getElementById('startTest');
 const statusEl = document.getElementById('status');
 const speedValueEl = document.getElementById('speedValue');
@@ -171,9 +172,9 @@ function updatePerformanceIndicators(download, upload, ping) {
 
 function resetResults() {
   updateDial(0, 'Preparing');
-  if (pingValueEl) pingValueEl.textContent = '0.0';
-  if (downloadValueEl) downloadValueEl.textContent = '0.00';
-  if (uploadValueEl) uploadValueEl.textContent = '0.00';
+  if (pingValueEl) pingValueEl.textContent = '--';
+  if (downloadValueEl) downloadValueEl.textContent = '--';
+  if (uploadValueEl) uploadValueEl.textContent = '--';
   resetIndicators();
 }
 
@@ -309,6 +310,10 @@ async function runTest() {
   if (!startButton) return;
 
   startButton.disabled = true;
+  if (appEl) {
+    appEl.classList.remove('has-results');
+    appEl.classList.add('is-running');
+  }
   resetResults();
   setStatus('Measuring ping...');
   let completedSuccessfully = false;
@@ -329,6 +334,9 @@ async function runTest() {
     updateDial(download, 'Complete');
     updatePerformanceIndicators(download, upload, ping);
     setStatus('All tests completed. Run it again anytime!');
+    if (appEl) {
+      appEl.classList.add('has-results');
+    }
     completedSuccessfully = true;
   } catch (error) {
     console.error(error);
@@ -338,6 +346,16 @@ async function runTest() {
   } finally {
     startButton.disabled = false;
     if (completedSuccessfully) {
+      setTimeout(() => {
+        updateDial(0, 'Idle');
+        if (appEl) {
+          appEl.classList.remove('is-running');
+        }
+      }, MIN_TEST_IDLE_DELAY_MS);
+    } else {
+      if (appEl) {
+        appEl.classList.remove('is-running');
+      }
       setTimeout(() => updateDial(0, 'Idle'), MIN_TEST_IDLE_DELAY_MS);
     }
   }
@@ -387,3 +405,7 @@ resetIndicators();
 setStatus('Ready when you are.');
 setDialLabel('Idle');
 updateDial(0, 'Idle');
+if (appEl) {
+  appEl.classList.remove('has-results');
+  appEl.classList.remove('is-running');
+}
