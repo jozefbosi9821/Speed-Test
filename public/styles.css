@@ -252,8 +252,8 @@ header p {
   text-transform: uppercase;
   color: rgba(173, 191, 230, 0.7);
   margin-bottom: 0.65rem;
-  opacity: 0;
-  transform: translateY(10px);
+  opacity: 1;
+  transform: translateY(0);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
@@ -262,8 +262,8 @@ header p {
   align-items: baseline;
   gap: 0.5rem;
   font-variant-numeric: tabular-nums;
-  opacity: 0;
-  transform: translateY(12px);
+  opacity: 1;
+  transform: translateY(0);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
@@ -509,6 +509,47 @@ header p {
   pointer-events: none;
 }
 
+.dashboard-empty {
+  display: none;
+  margin: 0 auto;
+  max-width: 320px;
+  text-align: center;
+  padding: 1.6rem 1.2rem 1.8rem;
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(18, 24, 48, 0.55), rgba(12, 17, 40, 0.4));
+  border: 1px solid rgba(96, 198, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  color: rgba(182, 196, 228, 0.85);
+  gap: 0.55rem;
+  font-size: 0.92rem;
+}
+
+.dashboard-empty-heading {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9beaff;
+  font-size: 0.75rem;
+}
+
+.dashboard-empty-subtext {
+  color: rgba(182, 196, 228, 0.75);
+  line-height: 1.5;
+}
+
+.app:not(.has-results) .dashboard-empty {
+  display: grid;
+  justify-items: center;
+}
+
+.app.has-results .dashboard-empty {
+  display: none;
+}
+
+.app.is-running .dashboard-empty {
+  display: none;
+}
+
 .connection-card {
   display: grid;
   gap: 0.6rem;
@@ -547,12 +588,6 @@ header p {
   opacity: 0;
   transform: scale(0.7);
   pointer-events: none;
-}
-
-.app.is-running .dial-inner-label,
-.app.is-running .dial-reading {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .app.has-results .dashboard-results {
