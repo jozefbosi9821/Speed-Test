@@ -3,12 +3,14 @@ const statusEl = document.getElementById('status');
 const speedValueEl = document.getElementById('speedValue');
 const speedLabelEl = document.getElementById('speedLabel');
 const dialNeedleEl = document.getElementById('dialNeedle');
+const dialInnerLabelEl = document.getElementById('dialInnerLabel');
 const pingValueEl = document.getElementById('pingValue');
 const downloadValueEl = document.getElementById('downloadValue');
 const uploadValueEl = document.getElementById('uploadValue');
 
 const DOWNLOAD_SIZE_BYTES = 8 * 1024 * 1024; // 8 MB
 const UPLOAD_SIZE_BYTES = 3 * 1024 * 1024; // 3 MB
+const CRYPTO_CHUNK_SIZE = 65536; // getRandomValues per-call limit
 const PING_ITERATIONS = 5;
 const DOWNLOAD_ITERATIONS = 3;
 const UPLOAD_ITERATIONS = 3;
@@ -61,11 +63,32 @@ function setStatus(message) {
   statusEl.textContent = message;
 }
 
+function setDialLabel(label) {
+  if (!dialInnerLabelEl) return;
+  const normalized = (label || '').toLowerCase();
+  if (normalized.startsWith('down')) {
+    dialInnerLabelEl.textContent = 'DOWNLOAD';
+  } else if (normalized.startsWith('up')) {
+    dialInnerLabelEl.textContent = 'UPLOAD';
+  } else if (normalized.includes('ping')) {
+    dialInnerLabelEl.textContent = 'PING';
+  } else if (normalized === 'complete') {
+    dialInnerLabelEl.textContent = 'RESULT';
+  } else if (normalized === 'idle') {
+    dialInnerLabelEl.textContent = 'READY';
+  } else if (normalized === 'error') {
+    dialInnerLabelEl.textContent = 'ERROR';
+  } else {
+    dialInnerLabelEl.textContent = 'SPEED';
+  }
+}
+
 function updateDial(value, label) {
   const numericValue = typeof value === 'number' && Number.isFinite(value) ? value : 0;
   const safeValue = Math.max(numericValue, 0);
   speedValueEl.textContent = formatMbps(safeValue);
   speedLabelEl.textContent = label;
+  setDialLabel(label);
 
   const normalized = clamp(safeValue, 0, SPEEDOMETER_MAX) / SPEEDOMETER_MAX;
   const rotation = SPEEDOMETER_MIN_ANGLE + (SPEEDOMETER_MAX_ANGLE - SPEEDOMETER_MIN_ANGLE) * normalized;
@@ -129,7 +152,16 @@ async function measureDownload() {
 
 function createUploadPayload(size) {
   const array = new Uint8Array(size);
-  crypto.getRandomValues(array);
+  if (window.crypto && typeof crypto.getRandomValues === 'function') {
+    for (let offset = 0; offset < array.length; offset += CRYPTO_CHUNK_SIZE) {
+      const slice = array.subarray(offset, Math.min(offset + CRYPTO_CHUNK_SIZE, array.length));
+      crypto.getRandomValues(slice);
+    }
+  } else {
+    for (let i = 0; i < array.length; i += 1) {
+      array[i] = Math.floor(Math.random() * 256);
+    }
+  }
   return array;
 }
 
@@ -171,6 +203,7 @@ async function runTest() {
   let completedSuccessfully = false;
 
   try {
+    setDialLabel('Ping');
     const ping = await measurePing();
     pingValueEl.textContent = formatLatency(ping);
 
@@ -203,3 +236,4 @@ startButton.addEventListener('click', () => {
 });
 
 setStatus('Ready when you are.');
+setDialLabel('Idle');

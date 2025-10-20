@@ -21,27 +21,51 @@
       <main>
         <section class="hero">
           <div class="speed-dial">
-            <div class="dial-face">
-              <div class="dial-glow"></div>
-              <div class="dial-ticks">
-                <span class="dial-tick" style="--rotation: -135deg"></span>
-                <span class="dial-tick" style="--rotation: -105deg"></span>
-                <span class="dial-tick" style="--rotation: -75deg"></span>
-                <span class="dial-tick" style="--rotation: -45deg"></span>
-                <span class="dial-tick" style="--rotation: -15deg"></span>
-                <span class="dial-tick" style="--rotation: 15deg"></span>
-                <span class="dial-tick" style="--rotation: 45deg"></span>
-                <span class="dial-tick" style="--rotation: 75deg"></span>
-                <span class="dial-tick" style="--rotation: 105deg"></span>
-                <span class="dial-tick" style="--rotation: 135deg"></span>
-              </div>
-              <div id="dialNeedle" class="dial-needle">
-                <span class="dial-needle-stem"></span>
-                <span class="dial-needle-cap"></span>
-              </div>
-              <div class="dial-inner">
-                <span id="speedValue" class="speed-value">0.00</span>
-                <span class="speed-unit">Mbps</span>
+            <div class="dial-frame">
+              <div class="dial-face">
+                <div class="dial-arcs">
+                  <span class="dial-arc dial-arc--low"></span>
+                  <span class="dial-arc dial-arc--mid"></span>
+                  <span class="dial-arc dial-arc--high"></span>
+                </div>
+                <div class="dial-glow"></div>
+                <div class="dial-ticks">
+                  <span class="dial-tick" style="--rotation: -135deg"></span>
+                  <span class="dial-tick" style="--rotation: -120deg"></span>
+                  <span class="dial-tick" style="--rotation: -105deg"></span>
+                  <span class="dial-tick" style="--rotation: -90deg"></span>
+                  <span class="dial-tick" style="--rotation: -75deg"></span>
+                  <span class="dial-tick" style="--rotation: -60deg"></span>
+                  <span class="dial-tick" style="--rotation: -45deg"></span>
+                  <span class="dial-tick" style="--rotation: -30deg"></span>
+                  <span class="dial-tick" style="--rotation: -15deg"></span>
+                  <span class="dial-tick" style="--rotation: 0deg"></span>
+                  <span class="dial-tick" style="--rotation: 15deg"></span>
+                  <span class="dial-tick" style="--rotation: 30deg"></span>
+                  <span class="dial-tick" style="--rotation: 45deg"></span>
+                  <span class="dial-tick" style="--rotation: 60deg"></span>
+                  <span class="dial-tick" style="--rotation: 75deg"></span>
+                  <span class="dial-tick" style="--rotation: 90deg"></span>
+                  <span class="dial-tick" style="--rotation: 105deg"></span>
+                  <span class="dial-tick" style="--rotation: 120deg"></span>
+                  <span class="dial-tick" style="--rotation: 135deg"></span>
+                </div>
+                <div class="dial-scale">
+                  <span class="dial-scale-value" style="--rotation: -135deg">0</span>
+                  <span class="dial-scale-value" style="--rotation: -67.5deg">50</span>
+                  <span class="dial-scale-value" style="--rotation: 0deg">100</span>
+                  <span class="dial-scale-value" style="--rotation: 67.5deg">150</span>
+                  <span class="dial-scale-value" style="--rotation: 135deg">200</span>
+                </div>
+                <div id="dialNeedle" class="dial-needle">
+                  <span class="dial-needle-stem"></span>
+                  <span class="dial-needle-cap"></span>
+                </div>
+                <div class="dial-inner">
+                  <span id="dialInnerLabel" class="dial-inner-label">DOWNLOAD</span>
+                  <span id="speedValue" class="speed-value">0.00</span>
+                  <span class="speed-unit">Mbps</span>
+                </div>
               </div>
             </div>
             <p id="speedLabel" class="speed-label">Idle</p>
