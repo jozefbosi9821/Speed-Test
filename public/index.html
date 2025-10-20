@@ -21,9 +21,28 @@
       <main>
         <section class="hero">
           <div class="speed-dial">
-            <div class="dial-inner">
-              <span id="speedValue" class="speed-value">0.00</span>
-              <span class="speed-unit">Mbps</span>
+            <div class="dial-face">
+              <div class="dial-glow"></div>
+              <div class="dial-ticks">
+                <span class="dial-tick" style="--rotation: -135deg"></span>
+                <span class="dial-tick" style="--rotation: -105deg"></span>
+                <span class="dial-tick" style="--rotation: -75deg"></span>
+                <span class="dial-tick" style="--rotation: -45deg"></span>
+                <span class="dial-tick" style="--rotation: -15deg"></span>
+                <span class="dial-tick" style="--rotation: 15deg"></span>
+                <span class="dial-tick" style="--rotation: 45deg"></span>
+                <span class="dial-tick" style="--rotation: 75deg"></span>
+                <span class="dial-tick" style="--rotation: 105deg"></span>
+                <span class="dial-tick" style="--rotation: 135deg"></span>
+              </div>
+              <div id="dialNeedle" class="dial-needle">
+                <span class="dial-needle-stem"></span>
+                <span class="dial-needle-cap"></span>
+              </div>
+              <div class="dial-inner">
+                <span id="speedValue" class="speed-value">0.00</span>
+                <span class="speed-unit">Mbps</span>
+              </div>
             </div>
             <p id="speedLabel" class="speed-label">Idle</p>
           </div>

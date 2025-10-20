@@ -2,6 +2,7 @@ const startButton = document.getElementById('startTest');
 const statusEl = document.getElementById('status');
 const speedValueEl = document.getElementById('speedValue');
 const speedLabelEl = document.getElementById('speedLabel');
+const dialNeedleEl = document.getElementById('dialNeedle');
 const pingValueEl = document.getElementById('pingValue');
 const downloadValueEl = document.getElementById('downloadValue');
 const uploadValueEl = document.getElementById('uploadValue');
@@ -15,15 +16,63 @@ const UPLOAD_ITERATIONS = 3;
 const formatMbps = (mbps) => mbps.toFixed(2);
 const formatLatency = (ms) => ms.toFixed(1);
 
+const SPEEDOMETER_MAX = 200;
+const SPEEDOMETER_MIN_ANGLE = -135;
+const SPEEDOMETER_MAX_ANGLE = 135;
+const REQUEST_TIMEOUT_MS = 15000;
+
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+async function fetchWithTimeout(resource, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const { signal, ...rest } = options;
+
+  if (signal) {
+    if (signal.aborted) {
+      controller.abort();
+    } else {
+      signal.addEventListener('abort', () => controller.abort(), { once: true });
+    }
+  }
+
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  try {
+    const response = await fetch(resource, {
+      ...rest,
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    return response;
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      throw new Error('Request timed out. Check your connection and try again.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 function setStatus(message) {
   statusEl.textContent = message;
 }
 
 function updateDial(value, label) {
-  speedValueEl.textContent = typeof value === 'number' && Number.isFinite(value)
-    ? formatMbps(value)
-    : '0.00';
+  const numericValue = typeof value === 'number' && Number.isFinite(value) ? value : 0;
+  const safeValue = Math.max(numericValue, 0);
+  speedValueEl.textContent = formatMbps(safeValue);
   speedLabelEl.textContent = label;
+
+  const normalized = clamp(safeValue, 0, SPEEDOMETER_MAX) / SPEEDOMETER_MAX;
+  const rotation = SPEEDOMETER_MIN_ANGLE + (SPEEDOMETER_MAX_ANGLE - SPEEDOMETER_MIN_ANGLE) * normalized;
+
+  if (dialNeedleEl) {
+    dialNeedleEl.style.transform = `rotate(${rotation}deg)`;
+  }
 }
 
 function resetResults() {
@@ -38,7 +87,7 @@ async function measurePing() {
   for (let i = 0; i < PING_ITERATIONS; i += 1) {
     const cacheBuster = `${Date.now()}-${i}`;
     const start = performance.now();
-    const response = await fetch(`/api/ping?cb=${cacheBuster}`, { cache: 'no-store' });
+    const response = await fetchWithTimeout(`/api/ping?cb=${cacheBuster}`, { cache: 'no-store' });
     await response.json();
     const end = performance.now();
     if (i > 0) {
@@ -59,7 +108,7 @@ async function measureDownload() {
   for (let i = 0; i < DOWNLOAD_ITERATIONS; i += 1) {
     const cacheBuster = `${Date.now()}-${i}`;
     const start = performance.now();
-    const response = await fetch(`/api/download?size=${DOWNLOAD_SIZE_BYTES}&cb=${cacheBuster}`, {
+    const response = await fetchWithTimeout(`/api/download?size=${DOWNLOAD_SIZE_BYTES}&cb=${cacheBuster}`, {
       cache: 'no-store',
     });
     const blob = await response.blob();
@@ -91,7 +140,7 @@ async function measureUpload() {
   for (let i = 0; i < UPLOAD_ITERATIONS; i += 1) {
     const payload = createUploadPayload(UPLOAD_SIZE_BYTES);
     const start = performance.now();
-    const response = await fetch(`/api/upload?cb=${Date.now()}-${i}`, {
+    const response = await fetchWithTimeout(`/api/upload?cb=${Date.now()}-${i}`, {
       method: 'POST',
       body: payload,
       headers: {
@@ -119,6 +168,7 @@ async function runTest() {
   startButton.disabled = true;
   resetResults();
   setStatus('Measuring ping...');
+  let completedSuccessfully = false;
 
   try {
     const ping = await measurePing();
@@ -134,13 +184,16 @@ async function runTest() {
 
     updateDial(download, 'Complete');
     setStatus('All tests completed. Run it again anytime!');
+    completedSuccessfully = true;
   } catch (error) {
     console.error(error);
-    setStatus('Something went wrong. Please try again.');
+    setStatus(error.message || 'Something went wrong. Please try again.');
     updateDial(0, 'Error');
   } finally {
     startButton.disabled = false;
-    setTimeout(() => updateDial(0, 'Idle'), 1500);
+    if (completedSuccessfully) {
+      setTimeout(() => updateDial(0, 'Idle'), 1500);
+    }
   }
 }
 
