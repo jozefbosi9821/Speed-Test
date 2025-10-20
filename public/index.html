@@ -23,73 +23,145 @@
           <div class="speed-dial">
             <div class="dial-frame">
               <div class="dial-face">
+                <div class="dial-shadow"></div>
                 <div class="dial-arcs">
-                  <span class="dial-arc dial-arc--low"></span>
-                  <span class="dial-arc dial-arc--mid"></span>
-                  <span class="dial-arc dial-arc--high"></span>
+                  <span class="dial-arc dial-arc--primary"></span>
+                  <span class="dial-arc dial-arc--secondary"></span>
+                  <span class="dial-arc dial-arc--tertiary"></span>
                 </div>
-                <div class="dial-glow"></div>
-                <div class="dial-ticks">
-                  <span class="dial-tick" style="--rotation: -135deg"></span>
-                  <span class="dial-tick" style="--rotation: -120deg"></span>
-                  <span class="dial-tick" style="--rotation: -105deg"></span>
-                  <span class="dial-tick" style="--rotation: -90deg"></span>
-                  <span class="dial-tick" style="--rotation: -75deg"></span>
-                  <span class="dial-tick" style="--rotation: -60deg"></span>
-                  <span class="dial-tick" style="--rotation: -45deg"></span>
-                  <span class="dial-tick" style="--rotation: -30deg"></span>
-                  <span class="dial-tick" style="--rotation: -15deg"></span>
-                  <span class="dial-tick" style="--rotation: 0deg"></span>
-                  <span class="dial-tick" style="--rotation: 15deg"></span>
-                  <span class="dial-tick" style="--rotation: 30deg"></span>
-                  <span class="dial-tick" style="--rotation: 45deg"></span>
-                  <span class="dial-tick" style="--rotation: 60deg"></span>
-                  <span class="dial-tick" style="--rotation: 75deg"></span>
-                  <span class="dial-tick" style="--rotation: 90deg"></span>
-                  <span class="dial-tick" style="--rotation: 105deg"></span>
-                  <span class="dial-tick" style="--rotation: 120deg"></span>
-                  <span class="dial-tick" style="--rotation: 135deg"></span>
-                </div>
-                <div class="dial-scale">
-                  <span class="dial-scale-value" style="--rotation: -135deg">0</span>
-                  <span class="dial-scale-value" style="--rotation: -67.5deg">50</span>
-                  <span class="dial-scale-value" style="--rotation: 0deg">100</span>
-                  <span class="dial-scale-value" style="--rotation: 67.5deg">150</span>
-                  <span class="dial-scale-value" style="--rotation: 135deg">200</span>
-                </div>
+                <div class="dial-ticks"></div>
+                <div class="dial-scale"></div>
                 <div id="dialNeedle" class="dial-needle">
                   <span class="dial-needle-stem"></span>
+                  <span class="dial-needle-glow"></span>
                   <span class="dial-needle-cap"></span>
                 </div>
                 <div class="dial-inner">
-                  <span id="dialInnerLabel" class="dial-inner-label">DOWNLOAD</span>
-                  <span id="speedValue" class="speed-value">0.00</span>
-                  <span class="speed-unit">Mbps</span>
+                  <span id="dialInnerLabel" class="dial-inner-label">READY</span>
+                  <span class="dial-reading">
+                    <span id="speedValue" class="speed-value">0.00</span>
+                    <span class="speed-unit">Mbps</span>
+                  </span>
                 </div>
               </div>
             </div>
-            <p id="speedLabel" class="speed-label">Idle</p>
           </div>
-          <div class="actions">
-            <button id="startTest" type="button" class="primary">Start Test</button>
-            <p id="status" class="status">Ready when you are.</p>
-          </div>
-        </section>
-        <section class="results">
-          <div class="result-card">
-            <h2>Ping</h2>
-            <p class="metric"><span id="pingValue">0</span><span class="metric-unit">ms</span></p>
-            <p class="metric-label">Round-trip latency</p>
-          </div>
-          <div class="result-card">
-            <h2>Download</h2>
-            <p class="metric"><span id="downloadValue">0.00</span><span class="metric-unit">Mbps</span></p>
-            <p class="metric-label">Average throughput</p>
-          </div>
-          <div class="result-card">
-            <h2>Upload</h2>
-            <p class="metric"><span id="uploadValue">0.00</span><span class="metric-unit">Mbps</span></p>
-            <p class="metric-label">Average throughput</p>
+          <div class="speed-dashboard">
+            <div class="dashboard-card">
+              <div class="dashboard-top">
+                <button id="startTest" type="button" class="go-button">
+                  <span class="go-button-ring"></span>
+                  <span class="go-button-text">GO</span>
+                </button>
+                <div class="dashboard-status">
+                  <span class="status-label">Status</span>
+                  <p id="status" class="status" role="status" aria-live="polite">Ready when you are.</p>
+                </div>
+              </div>
+              <div class="summary-grid">
+                <article class="summary-card summary-card--download">
+                  <div class="summary-heading">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M12 3a1 1 0 0 1 1 1v8.17l2.3-2.29a1 1 0 0 1 1.4 1.42l-4 3.99a1 1 0 0 1-1.4 0l-4-3.99a1 1 0 1 1 1.4-1.42L11 12.17V4a1 1 0 0 1 1-1Zm-7 14a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" />
+                    </svg>
+                    <span>Download</span>
+                  </div>
+                  <p class="summary-value">
+                    <span id="downloadValue" class="summary-number">0.00</span>
+                    <span class="summary-unit">Mbps</span>
+                  </p>
+                  <span class="summary-subtext">Average throughput</span>
+                </article>
+                <article class="summary-card summary-card--upload">
+                  <div class="summary-heading">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M12 3a1 1 0 0 1 .7.29l4 4a1 1 0 1 1-1.4 1.42L13 6.41V16a1 1 0 0 1-2 0V6.41L8.7 8.71a1 1 0 0 1-1.4-1.42l4-4A1 1 0 0 1 12 3Zm-7 14a1 1 0 0 1 1-1h12a1 1 0 0 1 0 2H6a1 1 0 0 1-1-1Z" />
+                    </svg>
+                    <span>Upload</span>
+                  </div>
+                  <p class="summary-value">
+                    <span id="uploadValue" class="summary-number">0.00</span>
+                    <span class="summary-unit">Mbps</span>
+                  </p>
+                  <span class="summary-subtext">Average throughput</span>
+                </article>
+                <article class="summary-card summary-card--ping">
+                  <div class="summary-heading">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M4 18a1 1 0 0 1-1-1v-2.26a1 1 0 0 1 1.86-.5l1.28 2.14 2.94-5.89a1 1 0 0 1 1.78.06l2.56 5.47 2.54-4.22A1 1 0 0 1 18 11h2a1 1 0 1 1 0 2h-1.46l-3.19 5.29a1 1 0 0 1-1.76-.08l-2.52-5.4-2.86 5.73a1 1 0 0 1-1.72.06l-1.16-1.94V17a1 1 0 0 1-1 1Z" />
+                    </svg>
+                    <span>Ping</span>
+                  </div>
+                  <p class="summary-value">
+                    <span id="pingValue" class="summary-number">0.0</span>
+                    <span class="summary-unit">ms</span>
+                  </p>
+                  <span class="summary-subtext">Round-trip latency</span>
+                </article>
+              </div>
+              <div class="indicator-grid">
+                <div class="indicator">
+                  <div class="indicator-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M12 3a9 9 0 0 1 8.94 8.06 1 1 0 1 1-1.99.28A7 7 0 1 0 19 12a1 1 0 0 1 2 0 9 9 0 1 1-9-9Z" />
+                      <path d="M12 7a1 1 0 0 1 1 1v4.59l2.3 2.3a1 1 0 1 1-1.4 1.41l-2.6-2.6A1 1 0 0 1 11 13V8a1 1 0 0 1 1-1Z" />
+                    </svg>
+                  </div>
+                  <div class="indicator-copy">
+                    <span class="indicator-label">Gaming</span>
+                    <span id="indicatorGaming" class="indicator-value">--</span>
+                  </div>
+                </div>
+                <div class="indicator">
+                  <div class="indicator-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M4 5a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v14a1 1 0 0 1-1.45.89L12 16.62l-6.55 3.27A1 1 0 0 1 4 19Z" />
+                    </svg>
+                  </div>
+                  <div class="indicator-copy">
+                    <span class="indicator-label">Streaming</span>
+                    <span id="indicatorStreaming" class="indicator-value">--</span>
+                  </div>
+                </div>
+                <div class="indicator">
+                  <div class="indicator-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M5 4a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v16a1 1 0 0 1-1.55.83L12 17.64l-5.45 3.19A1 1 0 0 1 5 20Z" />
+                      <path d="M9 6a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2Zm0 4a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2Zm0 4a1 1 0 0 0 0 2h3a1 1 0 0 0 0-2Z" />
+                    </svg>
+                  </div>
+                  <div class="indicator-copy">
+                    <span class="indicator-label">Video Calls</span>
+                    <span id="indicatorVideo" class="indicator-value">--</span>
+                  </div>
+                </div>
+                <div class="indicator">
+                  <div class="indicator-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-3.59l1.3 1.29a1 1 0 1 1-1.42 1.42l-2.7-2.7a1 1 0 0 1 0-1.42l2.7-2.7a1 1 0 1 1 1.42 1.42L14.41 17H18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3a1 1 0 0 1 0 2H6a3 3 0 0 1-3-3Z" />
+                    </svg>
+                  </div>
+                  <div class="indicator-copy">
+                    <span class="indicator-label">Browsing</span>
+                    <span id="indicatorBrowsing" class="indicator-value">--</span>
+                  </div>
+                </div>
+              </div>
+              <div class="connection-card">
+                <div class="connection-row">
+                  <span class="connection-label">Connections</span>
+                  <span class="connection-value">Multi</span>
+                </div>
+                <div class="connection-row">
+                  <span class="connection-label">Server</span>
+                  <span id="serverValue" class="connection-value">local</span>
+                </div>
+                <div class="connection-row">
+                  <span class="connection-label">Current Phase</span>
+                  <span id="speedLabel" class="connection-value connection-value--accent">Idle</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
         <section class="details">

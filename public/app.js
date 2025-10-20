@@ -4,26 +4,47 @@ const speedValueEl = document.getElementById('speedValue');
 const speedLabelEl = document.getElementById('speedLabel');
 const dialNeedleEl = document.getElementById('dialNeedle');
 const dialInnerLabelEl = document.getElementById('dialInnerLabel');
+const dialTicksEl = document.querySelector('.dial-ticks');
+const dialScaleEl = document.querySelector('.dial-scale');
+const serverValueEl = document.getElementById('serverValue');
 const pingValueEl = document.getElementById('pingValue');
 const downloadValueEl = document.getElementById('downloadValue');
 const uploadValueEl = document.getElementById('uploadValue');
+const indicatorGamingEl = document.getElementById('indicatorGaming');
+const indicatorStreamingEl = document.getElementById('indicatorStreaming');
+const indicatorVideoEl = document.getElementById('indicatorVideo');
+const indicatorBrowsingEl = document.getElementById('indicatorBrowsing');
 
 const DOWNLOAD_SIZE_BYTES = 8 * 1024 * 1024; // 8 MB
 const UPLOAD_SIZE_BYTES = 3 * 1024 * 1024; // 3 MB
 const CRYPTO_CHUNK_SIZE = 65536; // getRandomValues per-call limit
 const PING_ITERATIONS = 5;
-const DOWNLOAD_ITERATIONS = 3;
-const UPLOAD_ITERATIONS = 3;
+const MIN_DOWNLOAD_ITERATIONS = 3;
+const MIN_UPLOAD_ITERATIONS = 3;
+const MAX_DOWNLOAD_ITERATIONS = 12;
+const MAX_UPLOAD_ITERATIONS = 12;
+const MIN_DOWNLOAD_DURATION_MS = 3500;
+const MIN_UPLOAD_DURATION_MS = 2000;
 
 const formatMbps = (mbps) => mbps.toFixed(2);
 const formatLatency = (ms) => ms.toFixed(1);
 
-const SPEEDOMETER_MAX = 200;
+const SPEEDOMETER_MAX = 1000;
 const SPEEDOMETER_MIN_ANGLE = -135;
 const SPEEDOMETER_MAX_ANGLE = 135;
 const REQUEST_TIMEOUT_MS = 15000;
+const MIN_TEST_IDLE_DELAY_MS = 1500;
+const MINOR_TICK_STEP = 5;
+const SCALE_VALUES = [0, 5, 10, 50, 100, 250, 500, 750, 1000];
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const rotationForValue = (value) => {
+  const normalized = clamp(value, 0, SPEEDOMETER_MAX) / SPEEDOMETER_MAX;
+  return SPEEDOMETER_MIN_ANGLE + (SPEEDOMETER_MAX_ANGLE - SPEEDOMETER_MIN_ANGLE) * normalized;
+};
 
 async function fetchWithTimeout(resource, options = {}, timeout = REQUEST_TIMEOUT_MS) {
   const controller = new AbortController();
@@ -60,7 +81,9 @@ async function fetchWithTimeout(resource, options = {}, timeout = REQUEST_TIMEOU
 }
 
 function setStatus(message) {
-  statusEl.textContent = message;
+  if (statusEl) {
+    statusEl.textContent = message;
+  }
 }
 
 function setDialLabel(label) {
@@ -86,23 +109,89 @@ function setDialLabel(label) {
 function updateDial(value, label) {
   const numericValue = typeof value === 'number' && Number.isFinite(value) ? value : 0;
   const safeValue = Math.max(numericValue, 0);
-  speedValueEl.textContent = formatMbps(safeValue);
-  speedLabelEl.textContent = label;
+  if (speedValueEl) {
+    speedValueEl.textContent = formatMbps(safeValue);
+  }
+  if (speedLabelEl) {
+    speedLabelEl.textContent = label;
+  }
   setDialLabel(label);
 
-  const normalized = clamp(safeValue, 0, SPEEDOMETER_MAX) / SPEEDOMETER_MAX;
-  const rotation = SPEEDOMETER_MIN_ANGLE + (SPEEDOMETER_MAX_ANGLE - SPEEDOMETER_MIN_ANGLE) * normalized;
+  const rotation = rotationForValue(safeValue);
 
   if (dialNeedleEl) {
     dialNeedleEl.style.transform = `rotate(${rotation}deg)`;
   }
 }
 
+function resetIndicators() {
+  if (indicatorGamingEl) indicatorGamingEl.textContent = '--';
+  if (indicatorStreamingEl) indicatorStreamingEl.textContent = '--';
+  if (indicatorVideoEl) indicatorVideoEl.textContent = '--';
+  if (indicatorBrowsingEl) indicatorBrowsingEl.textContent = '--';
+}
+
+function updatePerformanceIndicators(download, upload, ping) {
+  if (indicatorGamingEl) {
+    if (Number.isFinite(ping)) {
+      const rating = ping <= 20 ? 'Excellent' : ping <= 50 ? 'Good' : ping <= 90 ? 'Fair' : 'Slow';
+      indicatorGamingEl.textContent = rating;
+    } else {
+      indicatorGamingEl.textContent = '--';
+    }
+  }
+
+  if (indicatorStreamingEl) {
+    if (Number.isFinite(download)) {
+      const rating = download >= 150 ? '4K UHD' : download >= 60 ? 'HD' : download >= 20 ? 'SD' : 'Limited';
+      indicatorStreamingEl.textContent = rating;
+    } else {
+      indicatorStreamingEl.textContent = '--';
+    }
+  }
+
+  if (indicatorVideoEl) {
+    if (Number.isFinite(upload)) {
+      const rating = upload >= 35 ? 'Crystal' : upload >= 15 ? 'Smooth' : upload >= 5 ? 'Stable' : 'Choppy';
+      indicatorVideoEl.textContent = rating;
+    } else {
+      indicatorVideoEl.textContent = '--';
+    }
+  }
+
+  if (indicatorBrowsingEl) {
+    if (Number.isFinite(download)) {
+      const rating = download >= 250 ? 'Instant' : download >= 80 ? 'Snappy' : download >= 25 ? 'Responsive' : 'Laggy';
+      indicatorBrowsingEl.textContent = rating;
+    } else {
+      indicatorBrowsingEl.textContent = '--';
+    }
+  }
+}
+
 function resetResults() {
   updateDial(0, 'Preparing');
-  pingValueEl.textContent = '0';
-  downloadValueEl.textContent = '0.00';
-  uploadValueEl.textContent = '0.00';
+  if (pingValueEl) pingValueEl.textContent = '0.0';
+  if (downloadValueEl) downloadValueEl.textContent = '0.00';
+  if (uploadValueEl) uploadValueEl.textContent = '0.00';
+  resetIndicators();
+}
+
+async function enforceMinimumDuration(measuredMs, minimumMs, { label, statusMessage, dialValue }) {
+  const remaining = minimumMs - measuredMs;
+  if (remaining <= 0) return;
+
+  if (Number.isFinite(dialValue)) {
+    updateDial(dialValue, label);
+  } else if (label) {
+    setDialLabel(label);
+  }
+
+  if (statusMessage) {
+    setStatus(statusMessage);
+  }
+
+  await wait(remaining);
 }
 
 async function measurePing() {
@@ -127,9 +216,13 @@ async function measurePing() {
 async function measureDownload() {
   let totalBits = 0;
   let totalTimeMs = 0;
+  let iteration = 0;
 
-  for (let i = 0; i < DOWNLOAD_ITERATIONS; i += 1) {
-    const cacheBuster = `${Date.now()}-${i}`;
+  while (
+    iteration < MIN_DOWNLOAD_ITERATIONS ||
+    (totalTimeMs < MIN_DOWNLOAD_DURATION_MS && iteration < MAX_DOWNLOAD_ITERATIONS)
+  ) {
+    const cacheBuster = `${Date.now()}-${iteration}`;
     const start = performance.now();
     const response = await fetchWithTimeout(`/api/download?size=${DOWNLOAD_SIZE_BYTES}&cb=${cacheBuster}`, {
       cache: 'no-store',
@@ -143,10 +236,16 @@ async function measureDownload() {
 
     const instantaneousMbps = (blob.size * 8) / duration / 1000;
     updateDial(instantaneousMbps, 'Downloading');
-    setStatus(`Downloading sample ${i + 1} of ${DOWNLOAD_ITERATIONS}...`);
+    iteration += 1;
+    setStatus(`Downloading sample ${iteration}...`);
   }
 
-  const averageMbps = (totalBits / totalTimeMs) / 1000;
+  const averageMbps = totalTimeMs > 0 ? (totalBits / totalTimeMs) / 1000 : 0;
+  await enforceMinimumDuration(totalTimeMs, MIN_DOWNLOAD_DURATION_MS, {
+    label: 'Downloading',
+    statusMessage: 'Stabilising download results...',
+    dialValue: averageMbps,
+  });
   return Number.isFinite(averageMbps) && averageMbps > 0 ? averageMbps : 0;
 }
 
@@ -168,11 +267,15 @@ function createUploadPayload(size) {
 async function measureUpload() {
   let totalBits = 0;
   let totalTimeMs = 0;
+  let iteration = 0;
 
-  for (let i = 0; i < UPLOAD_ITERATIONS; i += 1) {
+  while (
+    iteration < MIN_UPLOAD_ITERATIONS ||
+    (totalTimeMs < MIN_UPLOAD_DURATION_MS && iteration < MAX_UPLOAD_ITERATIONS)
+  ) {
     const payload = createUploadPayload(UPLOAD_SIZE_BYTES);
     const start = performance.now();
-    const response = await fetchWithTimeout(`/api/upload?cb=${Date.now()}-${i}`, {
+    const response = await fetchWithTimeout(`/api/upload?cb=${Date.now()}-${iteration}`, {
       method: 'POST',
       body: payload,
       headers: {
@@ -189,14 +292,22 @@ async function measureUpload() {
 
     const instantaneousMbps = (payload.byteLength * 8) / duration / 1000;
     updateDial(instantaneousMbps, 'Uploading');
-    setStatus(`Uploading sample ${i + 1} of ${UPLOAD_ITERATIONS}...`);
+    iteration += 1;
+    setStatus(`Uploading sample ${iteration}...`);
   }
 
-  const averageMbps = (totalBits / totalTimeMs) / 1000;
+  const averageMbps = totalTimeMs > 0 ? (totalBits / totalTimeMs) / 1000 : 0;
+  await enforceMinimumDuration(totalTimeMs, MIN_UPLOAD_DURATION_MS, {
+    label: 'Uploading',
+    statusMessage: 'Stabilising upload results...',
+    dialValue: averageMbps,
+  });
   return Number.isFinite(averageMbps) && averageMbps > 0 ? averageMbps : 0;
 }
 
 async function runTest() {
+  if (!startButton) return;
+
   startButton.disabled = true;
   resetResults();
   setStatus('Measuring ping...');
@@ -205,35 +316,74 @@ async function runTest() {
   try {
     setDialLabel('Ping');
     const ping = await measurePing();
-    pingValueEl.textContent = formatLatency(ping);
+    if (pingValueEl) pingValueEl.textContent = formatLatency(ping);
 
     setStatus('Running download test...');
     const download = await measureDownload();
-    downloadValueEl.textContent = formatMbps(download);
+    if (downloadValueEl) downloadValueEl.textContent = formatMbps(download);
 
     setStatus('Running upload test...');
     const upload = await measureUpload();
-    uploadValueEl.textContent = formatMbps(upload);
+    if (uploadValueEl) uploadValueEl.textContent = formatMbps(upload);
 
     updateDial(download, 'Complete');
+    updatePerformanceIndicators(download, upload, ping);
     setStatus('All tests completed. Run it again anytime!');
     completedSuccessfully = true;
   } catch (error) {
     console.error(error);
     setStatus(error.message || 'Something went wrong. Please try again.');
     updateDial(0, 'Error');
+    resetIndicators();
   } finally {
     startButton.disabled = false;
     if (completedSuccessfully) {
-      setTimeout(() => updateDial(0, 'Idle'), 1500);
+      setTimeout(() => updateDial(0, 'Idle'), MIN_TEST_IDLE_DELAY_MS);
     }
   }
 }
 
-startButton.addEventListener('click', () => {
-  if (startButton.disabled) return;
-  runTest();
-});
+if (startButton) {
+  startButton.addEventListener('click', () => {
+    if (startButton.disabled) return;
+    runTest();
+  });
+}
 
+function initializeDial() {
+  if (dialTicksEl) {
+    dialTicksEl.innerHTML = '';
+    const majorSet = new Set(SCALE_VALUES);
+    for (let value = 0; value <= SPEEDOMETER_MAX; value += MINOR_TICK_STEP) {
+      const tick = document.createElement('span');
+      tick.className = 'dial-tick';
+      if (majorSet.has(value)) {
+        tick.classList.add('dial-tick--major');
+      }
+      tick.style.setProperty('--rotation', `${rotationForValue(value)}deg`);
+      dialTicksEl.appendChild(tick);
+    }
+  }
+
+  if (dialScaleEl) {
+    dialScaleEl.innerHTML = '';
+    SCALE_VALUES.forEach((value) => {
+      const scaleValue = document.createElement('span');
+      scaleValue.className = 'dial-scale-value';
+      scaleValue.style.setProperty('--rotation', `${rotationForValue(value)}deg`);
+      scaleValue.textContent = value;
+      dialScaleEl.appendChild(scaleValue);
+    });
+  }
+
+  if (serverValueEl) {
+    const host = window.location.hostname || 'local';
+    serverValueEl.textContent = host || 'local';
+  }
+}
+
+initializeDial();
+resetIndicators();
 setStatus('Ready when you are.');
 setDialLabel('Idle');
+updateDial(0, 'Idle');

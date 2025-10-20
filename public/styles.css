@@ -1,13 +1,15 @@
 :root {
   color-scheme: dark;
-  --bg-gradient: radial-gradient(circle at top, #1c1f4d, #020411 65%);
-  --card-bg: rgba(8, 10, 26, 0.72);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --primary: #6ef9ff;
-  --accent: #f35cff;
-  --text-primary: #f2f5ff;
-  --text-muted: #8f96b2;
-  --dial-ring: conic-gradient(from -135deg, #3bd6ff 0deg, #3f7bff 110deg, #7e4dff 190deg, #f35cff 270deg);
+  --bg-gradient: radial-gradient(circle at 15% -20%, #1d2943 0%, #070b1c 48%, #01010a 100%);
+  --panel-surface: rgba(9, 13, 32, 0.82);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f5f7ff;
+  --text-muted: #8f95b8;
+  --teal: #54f0ff;
+  --aqua: #3cf6ff;
+  --blue: #2f6dff;
+  --purple: #2c2f55;
+  --accent: #6c7fff;
   font-family: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -23,49 +25,50 @@ body {
   justify-content: center;
   background: var(--bg-gradient);
   color: var(--text-primary);
-  padding: 2rem 1rem;
+  padding: 2.5rem 1.5rem;
 }
 
 .app {
-  width: min(960px, 100%);
-  background: rgba(5, 9, 25, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 28px;
-  padding: 2.5rem;
-  box-shadow: 0 40px 80px rgba(8, 12, 32, 0.45);
+  width: min(1040px, 100%);
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-border);
+  border-radius: 32px;
+  padding: 2.75rem 3rem;
+  box-shadow: 0 48px 120px rgba(6, 10, 30, 0.6);
   backdrop-filter: blur(18px);
 }
 
 header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 header h1 {
   margin: 0;
-  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-size: clamp(2.4rem, 4vw, 3.3rem);
   letter-spacing: -0.03em;
 }
 
 header p {
-  margin: 0.75rem 0 0;
+  margin: 1rem auto 0;
+  max-width: 600px;
   color: var(--text-muted);
   font-size: 1.05rem;
+  line-height: 1.6;
 }
 
 .hero {
   display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  align-items: center;
+  gap: 2.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: stretch;
 }
 
 .speed-dial {
-  position: relative;
   display: grid;
   place-items: center;
-  aspect-ratio: 1 / 1;
-  max-width: clamp(280px, 32vw, 360px);
+  max-width: clamp(320px, 34vw, 420px);
+  margin: 0 auto;
 }
 
 .dial-frame {
@@ -73,11 +76,14 @@ header p {
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
-  padding: 4.5%;
-  background: radial-gradient(circle at center, rgba(9, 13, 32, 0.85) 56%, transparent 57%), var(--dial-ring);
+  padding: 5.5%;
+  background:
+    radial-gradient(circle at 50% 56%, rgba(11, 18, 40, 0.95) 58%, rgba(11, 18, 40, 0) 60%),
+    conic-gradient(from -135deg, rgba(25, 28, 58, 0) 0deg, rgba(25, 28, 58, 0.85) 40deg, rgba(31, 35, 64, 0.7) 220deg, rgba(27, 30, 58, 0) 270deg);
   box-shadow:
-    0 24px 45px rgba(6, 12, 36, 0.65),
-    inset 0 2px 20px rgba(111, 249, 255, 0.35);
+    inset 0 18px 36px rgba(13, 25, 65, 0.6),
+    inset 0 -12px 24px rgba(6, 9, 26, 0.85),
+    0 30px 60px rgba(9, 16, 40, 0.6);
   display: grid;
   place-items: center;
 }
@@ -87,63 +93,53 @@ header p {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 40%, rgba(73, 103, 255, 0.35), transparent 68%), radial-gradient(circle at 50% 110%, rgba(10, 12, 30, 0.75), rgba(3, 6, 18, 0.95));
-  border: 2px solid rgba(255, 255, 255, 0.05);
-  box-shadow:
-    inset 0 24px 60px rgba(8, 16, 46, 0.85),
-    inset 0 -6px 18px rgba(10, 12, 30, 0.85);
-  display: grid;
-  place-items: center;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(67, 109, 255, 0.28) 0%, rgba(24, 34, 68, 0.05) 38%, transparent 55%),
+    radial-gradient(circle at 50% 115%, rgba(4, 6, 20, 0.95) 0%, rgba(9, 12, 35, 0.9) 55%, rgba(12, 16, 44, 0.8) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden;
 }
 
-.dial-arcs,
-.dial-glow,
-.dial-ticks,
-.dial-scale,
-.dial-needle,
-.dial-inner {
+.dial-shadow {
   position: absolute;
+  inset: 18% 12% 48% 12%;
+  border-radius: 50% 50% 40% 40% / 45% 45% 55% 55%;
+  background: linear-gradient(180deg, rgba(148, 207, 255, 0.35), rgba(43, 61, 118, 0));
+  opacity: 0.55;
+  filter: blur(2px);
 }
 
 .dial-arcs {
-  inset: 10%;
+  position: absolute;
+  inset: 8%;
   border-radius: 50%;
-  filter: drop-shadow(0 0 12px rgba(110, 249, 255, 0.35));
 }
 
 .dial-arc {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  opacity: 0.75;
-  -webkit-mask: radial-gradient(circle at center, transparent 62%, black 64%);
-  mask: radial-gradient(circle at center, transparent 62%, black 64%);
+  -webkit-mask: radial-gradient(circle at center, transparent 62%, rgba(0, 0, 0, 0.9) 64%, rgba(0, 0, 0, 0.9) 75%, transparent 77%);
+  mask: radial-gradient(circle at center, transparent 62%, rgba(0, 0, 0, 0.9) 64%, rgba(0, 0, 0, 0.9) 75%, transparent 77%);
 }
 
-.dial-arc--low {
-  background: conic-gradient(from -135deg, rgba(67, 224, 255, 0.15) 0deg, rgba(67, 224, 255, 0.95) 95deg, transparent 120deg);
+.dial-arc--primary {
+  background: conic-gradient(from -135deg, rgba(67, 240, 255, 0.1) 0deg, rgba(73, 244, 255, 0.9) 110deg, rgba(52, 126, 255, 0.9) 180deg, rgba(38, 44, 80, 0.35) 245deg, rgba(38, 44, 80, 0.05) 270deg);
+  filter: drop-shadow(0 0 16px rgba(80, 239, 255, 0.5));
 }
 
-.dial-arc--mid {
-  background: conic-gradient(from -135deg, transparent 100deg, rgba(103, 125, 255, 0.8) 175deg, transparent 200deg);
+.dial-arc--secondary {
+  background: conic-gradient(from -135deg, rgba(30, 36, 72, 0.2) 0deg, rgba(30, 36, 72, 0.65) 270deg);
 }
 
-.dial-arc--high {
-  background: conic-gradient(from -135deg, transparent 190deg, rgba(243, 92, 255, 0.8) 260deg, rgba(243, 92, 255, 0.15) 270deg);
-}
-
-.dial-glow {
-  inset: 16%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 35%, rgba(111, 249, 255, 0.45), transparent 60%);
-  filter: blur(10px);
-  opacity: 0.6;
-  pointer-events: none;
+.dial-arc--tertiary {
+  background: conic-gradient(from -135deg, rgba(14, 17, 34, 0.7) 0deg, rgba(14, 17, 34, 0.1) 270deg);
+  filter: blur(3px);
 }
 
 .dial-ticks {
-  inset: 12%;
+  position: absolute;
+  inset: 15%;
   border-radius: 50%;
 }
 
@@ -151,234 +147,453 @@ header p {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 3px;
-  height: 22%;
-  background: linear-gradient(to bottom, rgba(111, 249, 255, 0.9), rgba(111, 249, 255, 0));
-  transform-origin: center calc(100% - 10px);
+  width: 2px;
+  height: 20%;
+  background: linear-gradient(to bottom, rgba(86, 242, 255, 0.9), rgba(86, 242, 255, 0));
+  transform-origin: center calc(100% - 8px);
   transform: rotate(var(--rotation));
-  opacity: 0.85;
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
 }
 
-.dial-tick:nth-child(2n) {
-  height: 18%;
-  opacity: 0.45;
+.dial-tick--major {
+  width: 3px;
+  height: 26%;
+  opacity: 0.9;
+  background: linear-gradient(to bottom, rgba(99, 247, 255, 0.9), rgba(20, 30, 60, 0.2));
 }
 
 .dial-scale {
-  inset: 20%;
+  position: absolute;
+  inset: 22%;
   border-radius: 50%;
-  font-size: 0.8rem;
-  color: rgba(208, 224, 255, 0.75);
-  letter-spacing: 0.05em;
+  font-size: 0.78rem;
+  color: rgba(212, 227, 255, 0.82);
+  letter-spacing: 0.08em;
 }
 
 .dial-scale-value {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: rotate(var(--rotation)) translateY(-162%) rotate(calc(-1 * var(--rotation)));
-  transform-origin: center;
   font-weight: 600;
+  transform: rotate(var(--rotation)) translateY(-170%) rotate(calc(-1 * var(--rotation)));
+  transform-origin: center;
+  text-shadow: 0 0 6px rgba(13, 210, 255, 0.3);
 }
 
 .dial-needle {
-  inset: 0;
+  position: absolute;
+  inset: 6%;
   display: flex;
   align-items: center;
   justify-content: center;
   transform: rotate(-135deg);
-  transition: transform 0.4s cubic-bezier(0.4, 1.3, 0.6, 1);
   transform-origin: center;
+  transition: transform 0.35s cubic-bezier(0.45, 1.4, 0.6, 1);
 }
 
 .dial-needle-stem {
   position: absolute;
-  bottom: calc(50% + 4px);
-  left: calc(50% - 1.5px);
-  width: 3px;
-  height: 44%;
+  bottom: 50%;
+  left: calc(50% - 2px);
+  width: 4px;
+  height: 50%;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(111, 249, 255, 0.95) 0%, rgba(243, 92, 255, 0.7) 70%, rgba(243, 92, 255, 0.15) 100%);
-  box-shadow: 0 0 18px rgba(243, 92, 255, 0.45);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(84, 240, 255, 0.95) 40%, rgba(36, 44, 90, 0.9) 100%);
+  box-shadow:
+    0 0 18px rgba(85, 242, 255, 0.7),
+    0 8px 14px rgba(15, 20, 45, 0.6);
+}
+
+.dial-needle-glow {
+  position: absolute;
+  bottom: calc(50% - 4%);
+  left: 50%;
+  width: 10px;
+  height: 38%;
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+  transform: translateX(-50%);
+  opacity: 0.65;
+  filter: blur(1px);
 }
 
 .dial-needle-cap {
   position: absolute;
-  width: 48px;
-  height: 48px;
+  width: 16%;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(11, 15, 30, 0.85) 0%, rgba(4, 6, 16, 0.95) 70%);
-  border: 2px solid rgba(111, 249, 255, 0.45);
-  box-shadow: 0 0 22px rgba(111, 249, 255, 0.35);
-  top: calc(50% - 24px);
-  left: calc(50% - 24px);
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(39, 47, 98, 0.9));
+  box-shadow:
+    inset 0 4px 6px rgba(255, 255, 255, 0.35),
+    inset 0 -4px 6px rgba(18, 20, 38, 0.7);
 }
 
 .dial-inner {
-  position: relative;
-  width: 63%;
-  height: 63%;
-  border-radius: 50%;
+  position: absolute;
+  inset: 32% 22% 22% 22%;
+  border-radius: 48% 48% 42% 42% / 52% 52% 48% 48%;
+  background: radial-gradient(circle at 50% 20%, rgba(64, 92, 180, 0.15), rgba(11, 16, 38, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 24px 32px rgba(6, 10, 28, 0.9),
+    inset 0 -12px 18px rgba(4, 6, 16, 0.9);
   display: grid;
   place-items: center;
-  gap: 0.35rem;
-  background: radial-gradient(circle at center, rgba(9, 13, 32, 0.4), rgba(4, 7, 20, 0.95));
-  border: 2px solid rgba(111, 249, 255, 0.35);
-  box-shadow:
-    inset 0 0 40px rgba(32, 58, 121, 0.4),
-    0 0 16px rgba(111, 249, 255, 0.25);
-  z-index: 1;
+  text-align: center;
+  padding: 1.25rem 1rem 1.5rem;
 }
 
 .dial-inner-label {
+  display: block;
   font-size: 0.75rem;
   letter-spacing: 0.35em;
-  color: rgba(208, 224, 255, 0.6);
-  transform: translateY(6px);
+  text-transform: uppercase;
+  color: rgba(173, 191, 230, 0.7);
+  margin-bottom: 0.65rem;
+}
+
+.dial-reading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .speed-value {
-  font-size: clamp(2.75rem, 7vw, 4.2rem);
+  font-size: clamp(2.8rem, 8vw, 4.5rem);
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.03em;
+  text-shadow: 0 0 18px rgba(86, 242, 255, 0.35);
 }
 
 .speed-unit {
-  font-size: 0.95rem;
-  color: rgba(208, 224, 255, 0.75);
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
+  font-size: 1rem;
+  color: rgba(186, 202, 235, 0.7);
+  letter-spacing: 0.2em;
 }
 
-.speed-label {
-  margin-top: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.speed-dashboard {
+  display: flex;
+  align-items: stretch;
 }
 
-.actions {
-  display: grid;
-  gap: 1rem;
-  justify-items: start;
+.dashboard-card {
+  width: 100%;
+  background: linear-gradient(155deg, rgba(13, 18, 40, 0.92), rgba(6, 9, 25, 0.9));
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 22px 60px rgba(6, 10, 28, 0.65);
 }
 
-button.primary {
-  font-size: 1.1rem;
-  padding: 0.85rem 2.4rem;
-  border-radius: 999px;
+.dashboard-top {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.go-button {
+  position: relative;
+  width: 126px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
   border: none;
-  background: linear-gradient(135deg, #5ef0ff, #3ca6ff);
-  color: #031021;
-  font-weight: 700;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.9), rgba(133, 248, 255, 0.65), rgba(43, 53, 90, 0.6));
+  color: #081224;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
   cursor: pointer;
+  box-shadow:
+    0 24px 45px rgba(18, 32, 64, 0.55),
+    inset 0 4px 10px rgba(255, 255, 255, 0.55),
+    inset 0 -10px 16px rgba(31, 44, 86, 0.95);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 18px 30px rgba(94, 240, 255, 0.25);
 }
 
-button.primary:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 24px 36px rgba(94, 240, 255, 0.35);
+.go-button-ring {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  border: 2px solid rgba(84, 240, 255, 0.35);
+  box-shadow:
+    0 0 25px rgba(86, 242, 255, 0.5),
+    inset 0 0 20px rgba(86, 242, 255, 0.35);
 }
 
-button.primary:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-  box-shadow: none;
+.go-button-text {
+  position: relative;
+  z-index: 1;
+}
+
+.go-button:active {
+  transform: scale(0.97);
+  box-shadow:
+    0 14px 30px rgba(16, 24, 52, 0.6),
+    inset 0 3px 8px rgba(255, 255, 255, 0.4),
+    inset 0 -8px 14px rgba(31, 44, 86, 0.85);
+}
+
+.go-button:focus-visible {
+  outline: 2px solid rgba(84, 240, 255, 0.7);
+  outline-offset: 6px;
+}
+
+.dashboard-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.status-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: rgba(179, 197, 228, 0.7);
 }
 
 .status {
   margin: 0;
-  color: var(--text-muted);
-  min-height: 1.5rem;
-}
-
-.results {
-  margin-top: 2.5rem;
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-.result-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 20px;
-  padding: 1.75rem;
-  display: grid;
-  gap: 0.5rem;
-  box-shadow: inset 0 0 20px rgba(94, 240, 255, 0.08);
-}
-
-.result-card h2 {
-  margin: 0;
   font-size: 1.05rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
-.metric {
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem;
+}
+
+.summary-card {
+  padding: 1.35rem;
+  border-radius: 22px;
+  background: linear-gradient(160deg, rgba(17, 23, 47, 0.9), rgba(12, 17, 36, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 0.65rem;
+}
+
+.summary-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(203, 214, 241, 0.85);
+}
+
+.summary-heading svg {
+  width: 22px;
+  height: 22px;
+  fill: rgba(111, 243, 255, 0.85);
+}
+
+.summary-value {
   margin: 0;
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
-  font-weight: 700;
-  font-size: 2.4rem;
+  gap: 0.45rem;
 }
 
-.metric-unit {
-  font-size: 1rem;
-  color: var(--text-muted);
+.summary-number {
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.summary-unit {
+  font-size: 0.95rem;
+  color: rgba(181, 194, 224, 0.75);
+  letter-spacing: 0.18em;
+}
+
+.summary-subtext {
+  font-size: 0.8rem;
+  color: rgba(160, 176, 214, 0.65);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-.metric-label {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.95rem;
+.summary-card--download .summary-number,
+.summary-card--download .summary-heading svg {
+  color: var(--teal);
+  fill: var(--teal);
 }
 
-.details {
-  margin-top: 2rem;
-  background: rgba(3, 7, 20, 0.6);
+.summary-card--upload .summary-heading svg {
+  fill: #97a8ff;
+}
+
+.summary-card--ping .summary-heading svg {
+  fill: #ffd966;
+}
+
+.indicator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.9rem;
+}
+
+.indicator {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
   border-radius: 18px;
-  padding: 1.5rem 1.75rem;
+  background: linear-gradient(150deg, rgba(16, 20, 42, 0.9), rgba(9, 13, 32, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.indicator-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, rgba(84, 240, 255, 0.35), rgba(35, 50, 90, 0.15));
+  display: grid;
+  place-items: center;
+}
+
+.indicator-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: rgba(118, 248, 255, 0.8);
+}
+
+.indicator-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.indicator-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(182, 196, 228, 0.75);
+}
+
+.indicator-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e5f6ff;
+}
+
+.connection-card {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1.2rem 1.4rem;
+  border-radius: 20px;
+  background: linear-gradient(150deg, rgba(15, 19, 40, 0.92), rgba(10, 12, 30, 0.9));
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.details h3 {
-  margin-top: 0;
-  letter-spacing: 0.08em;
+.connection-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+.connection-label {
   text-transform: uppercase;
-  color: var(--text-muted);
+  letter-spacing: 0.2em;
+  color: rgba(182, 196, 228, 0.65);
+  font-size: 0.7rem;
+}
+
+.connection-value {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.connection-value--accent {
+  color: var(--teal);
+}
+
+.details {
+  margin-top: 3.5rem;
+  padding: 2rem 2.4rem;
+  border-radius: 24px;
+  background: linear-gradient(155deg, rgba(13, 17, 37, 0.92), rgba(7, 9, 24, 0.92));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.details h3 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
 }
 
 .details ul {
-  margin: 0.75rem 0 0;
-  padding-left: 1.2rem;
+  margin: 0;
+  padding-left: 1.1rem;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.75;
+  font-size: 0.98rem;
 }
 
 footer {
   margin-top: 2.5rem;
   text-align: center;
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  color: rgba(162, 176, 212, 0.6);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 960px) {
+  body {
+    padding: 2rem 1rem;
+  }
+
+  .app {
+    padding: 2.25rem 2.2rem;
+  }
+
+  .dashboard-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .go-button {
+    width: 112px;
+  }
 }
 
 @media (max-width: 640px) {
   .app {
     padding: 2rem 1.5rem;
+    border-radius: 24px;
   }
 
-  .actions {
-    justify-items: center;
+  .hero {
+    grid-template-columns: 1fr;
   }
 
-  .status {
-    text-align: center;
+  .speed-dial {
+    max-width: 320px;
+  }
+
+  .dashboard-card {
+    padding: 1.75rem;
+  }
+
+  .indicator-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .details {
+    padding: 1.75rem;
   }
 }
