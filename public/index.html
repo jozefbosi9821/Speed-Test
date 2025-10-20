@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Speed Meter</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h1>Open Speed Meter</h1>
+        <p>Measure your network latency, download, and upload performance in one click.</p>
+      </header>
+      <main>
+        <section class="hero">
+          <div class="speed-dial">
+            <div class="dial-inner">
+              <span id="speedValue" class="speed-value">0.00</span>
+              <span class="speed-unit">Mbps</span>
+            </div>
+            <p id="speedLabel" class="speed-label">Idle</p>
+          </div>
+          <div class="actions">
+            <button id="startTest" type="button" class="primary">Start Test</button>
+            <p id="status" class="status">Ready when you are.</p>
+          </div>
+        </section>
+        <section class="results">
+          <div class="result-card">
+            <h2>Ping</h2>
+            <p class="metric"><span id="pingValue">0</span><span class="metric-unit">ms</span></p>
+            <p class="metric-label">Round-trip latency</p>
+          </div>
+          <div class="result-card">
+            <h2>Download</h2>
+            <p class="metric"><span id="downloadValue">0.00</span><span class="metric-unit">Mbps</span></p>
+            <p class="metric-label">Average throughput</p>
+          </div>
+          <div class="result-card">
+            <h2>Upload</h2>
+            <p class="metric"><span id="uploadValue">0.00</span><span class="metric-unit">Mbps</span></p>
+            <p class="metric-label">Average throughput</p>
+          </div>
+        </section>
+        <section class="details">
+          <h3>How it works</h3>
+          <ul>
+            <li>Latency is calculated by making multiple quick requests to the server.</li>
+            <li>Download speed is calculated by timing the transfer of binary payloads from the server.</li>
+            <li>Upload speed is calculated by timing the transfer of randomly generated data back to the server.</li>
+          </ul>
+        </section>
+      </main>
+      <footer>
+        <p>Built with ❤️ using Node.js and modern browser APIs.</p>
+      </footer>
+    </div>
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
